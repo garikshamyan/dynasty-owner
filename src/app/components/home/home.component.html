@@ -1,0 +1,8 @@
+<div>
+  <form class="repo-search-form" [formGroup]="repoForm" (ngSubmit)="onFormSubmit()">
+    <mat-form-field >
+      <input matInput placeholder="Link to Github repo" formControlName="search">
+    </mat-form-field>
+    <button mat-raised-button>Search</button>
+  </form>
+</div>

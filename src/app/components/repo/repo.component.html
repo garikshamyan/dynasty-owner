@@ -1,0 +1,73 @@
+<mat-tab-group mat-stretch-tabs>
+  <mat-tab label="Repo Info">
+      <div class="container" *ngIf="repo">
+        <div>
+          <h1>{{repo.full_name}}</h1>
+          <img class="avatar" *ngIf="repo.owner.avatar_url" [src]="repo.owner.avatar_url">
+        </div>
+        <div>
+         <p>Created at: {{repo.created_at | date}}</p>
+          <p *ngIf="repo.language">Language {{repo.language}}</p>
+        </div>
+        <div class="branches">
+          <h3>Branches</h3>
+        <p *ngFor="let branch of branches">{{branch.name}}</p>
+        </div>
+
+      </div>
+  </mat-tab>
+  <mat-tab label="Commits">
+
+    <mat-form-field>
+      <mat-label>Select Branch</mat-label>
+      <mat-select (selectionChange)="onBranchChange($event)">
+        <mat-option  *ngFor="let branch of branches" [value]="branch.name">
+          {{branch.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <table mat-table [dataSource]="commits" class="mat-elevation-z8">
+
+
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef> Avatar </th>
+        <td mat-cell style="width: 10%" *matCellDef="let element">
+          <img [src]="element.avatar" [alt]="element.author">
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="author">
+        <th mat-header-cell *matHeaderCellDef> Author </th>
+        <td mat-cell *matCellDef="let element"> {{element.author}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sha">
+        <th mat-header-cell *matHeaderCellDef> sha </th>
+        <td mat-cell *matCellDef="let element"> {{element.sha}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="message">
+        <th mat-header-cell *matHeaderCellDef> message </th>
+        <td mat-cell *matCellDef="let element" style="width: 51%; padding-right: 10px"> {{element.message}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> date </th>
+        <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="commitsColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: commitsColumns;"></tr>
+    </table>
+    <mat-paginator [length]="totalCommits"
+                   [pageSize]="itemsPerPage"
+                   [pageIndex]="pageCommits - 1"
+                   [pageSizeOptions]="[10, 30, 100]"
+                   (page)="onPage($event)"
+    >
+    </mat-paginator>
+  </mat-tab>
+
+</mat-tab-group>
+
